@@ -18,7 +18,8 @@ const productSchema = new Schema(
       ref: "Restaurant",
       required: true
     }
-  }
+  },
+  { timestamps: true }
 )
 
 const Product = model("Product", productSchema)

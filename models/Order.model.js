@@ -13,7 +13,7 @@ const orderSchema = new Schema(
       ref: "Restaurant",
       required: [true, "Restaurant is required."],
     },
-    items: [
+    products: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +22,6 @@ const orderSchema = new Schema(
         },
         quantity: {
           type: Number,
-          required: true,
           default: 1,
           min: 1
         },
@@ -34,14 +33,15 @@ const orderSchema = new Schema(
     ],
     total: {
       type: Number,
-      required: true
+      default: 0
     },
     status: {
       type: String,
       enum: ["pending", "confirmed", "delivered", "cancelled"],
       default: "pending"
     }
-  }
+  },
+  { timestamps: true }
 )
 
 const Order = model("Order", orderSchema)

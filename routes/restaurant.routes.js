@@ -3,34 +3,52 @@ const mongoose = require("mongoose")
 const router = express.Router()
 
 const Restaurant = require("../models/Restaurant.model")
+
 const { isAuthenticated } = require("../middleware/jwt.middleware")
+
 
 // POST /restaurants
 
 router.post("/restaurants", isAuthenticated, async (req, res, next) => {
 
   try {
-    const newRestaurant = req.body
-    const response = await Restaurant.create(newRestaurant)
-    res.status(201).json(response)
+    const { name, category, image, description } = req.body
+
+    if (!name || !category) {
+      return res.status(400).json({ message: "Name and category are required" })
+    }
+
+    const newRestaurant = {
+      name,
+      category,
+      image,
+      description
+    }
+
+    const createdRestaurant = await Restaurant.create(newRestaurant)
+    res.status(201).json(createdRestaurant)
+
   } catch (err) {
     console.error("Error creating a restaurant", err)
     next(err)
   }
 })
 
+
 // GET /restaurants
 
 router.get("/restaurants", async (req, res, next) => {
 
   try {
-    const response = await Restaurant.find({})
-    res.json(response)
+    const restaurants = await Restaurant.find({})
+    res.json(restaurants)
+
   } catch (err) {
     console.error("Error getting restaurants", err)
     next(err)
   }
 })
+
 
 // GET /restaurants/:restaurantId
 
@@ -40,23 +58,23 @@ router.get("/restaurants/:restaurantId", async (req, res, next) => {
     const { restaurantId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
-      res.status(400).json({ message: "Specified id is not valid" })
-      return
+      return res.status(400).json({ message: "Specified id is not valid" })
     }
 
-    const response = await Restaurant.findById(restaurantId)
+    const restaurant = await Restaurant.findById(restaurantId)
 
-    if (!response) {
-      res.status(404).json({ message: "Restaurant not found" })
-      return
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" })
     }
 
-    res.json(response)
+    res.json(restaurant)
+
   } catch (err) {
     console.error("Error getting a restaurant", err)
     next(err)
   }
 })
+
 
 // PUT /restaurants/:restaurantId
 
@@ -67,47 +85,47 @@ router.put("/restaurants/:restaurantId", isAuthenticated, async (req, res, next)
     const newDetails = req.body
 
     if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
-      res.status(400).json({ message: "Specified id is not valid" })
-      return
+      return res.status(400).json({ message: "Specified id is not valid" })
     }
 
-    const response = await Restaurant.findByIdAndUpdate(
+    const updatedRestaurant  = await Restaurant.findByIdAndUpdate(
       restaurantId,
       newDetails,
       { new: true, runValidators: true }
     )
 
-    if (!response) {
-      res.status(404).json({ message: "Restaurant not found" })
-      return
+    if (!updatedRestaurant) {
+      return res.status(404).json({ message: "Restaurant not found" })
     }
 
-    res.json(response)
+    res.json(updatedRestaurant)
+
   } catch (err) {
     console.error("Error updating a restaurant", err)
     next(err)
   }
 })
 
+
 // DELETE /restaurants/:restaurantId
+
 router.delete("/restaurants/:restaurantId", isAuthenticated, async (req, res, next) => {
 
   try {
     const { restaurantId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
-      res.status(400).json({ message: "Specified id is not valid" })
-      return
+      return res.status(400).json({ message: "Specified id is not valid" })
     }
 
-    const response = await Restaurant.findByIdAndDelete(restaurantId)
+    const deletedRestaurant  = await Restaurant.findByIdAndDelete(restaurantId)
 
-    if (!response) {
-      res.status(404).json({ message: "Restaurant not found" })
-      return
+    if (!deletedRestaurant ) {
+      return res.status(404).json({ message: "Restaurant not found" })
     }
 
     res.status(204).send()
+
   } catch (err) {
     console.error("Error deleting a restaurant", err)
     next(err)

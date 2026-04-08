@@ -20,7 +20,8 @@ const restaurantSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     }
-  }
+  },
+  { timestamps: true }
 )
 
 const Restaurant = model("Restaurant", restaurantSchema)
