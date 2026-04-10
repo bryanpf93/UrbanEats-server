@@ -23,7 +23,15 @@ function getTokenFromHeaders(req) {
   return null;
 }
 
+const isAdmin = (req, res, next) => {
+  if (!req.payload || req.payload.role !== "admin") {
+    return res.status(403).json({ message: "Forbidden: Admins only" });
+  }
+  next();
+};
+
 // Export the middleware so that we can use it to create protected routes
 module.exports = {
   isAuthenticated,
+  isAdmin
 };

@@ -8,11 +8,13 @@ const orderSchema = new Schema(
       ref: "User",
       required: [true, "User is required."]
     },
+
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
       required: [true, "Restaurant is required."],
     },
+
     products: [
       {
         product: {
@@ -31,13 +33,16 @@ const orderSchema = new Schema(
         }
       }
     ],
+
     total: {
       type: Number,
+      min: 1,
       default: 0
     },
+
     status: {
       type: String,
-      enum: ["pending", "confirmed", "delivered", "cancelled"],
+      enum: ["pendiente", "confirmado", "entregado", "cancelado"],
       default: "pending"
     }
   },

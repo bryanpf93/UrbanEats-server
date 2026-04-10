@@ -4,15 +4,15 @@ const router = express.Router()
 
 const Restaurant = require("../models/Restaurant.model")
 
-const { isAuthenticated } = require("../middleware/jwt.middleware")
+const { isAuthenticated, isAdmin } = require("../middleware/jwt.middleware")
 
 
 // POST /restaurants
 
-router.post("/restaurants", isAuthenticated, async (req, res, next) => {
+router.post("/restaurants", isAuthenticated, isAdmin, async (req, res, next) => {
 
   try {
-    const { name, category, image, description } = req.body
+    const { name, category, image, description, address, location, rating, phone } = req.body
 
     if (!name || !category) {
       return res.status(400).json({ message: "Name and category are required" })
@@ -22,7 +22,11 @@ router.post("/restaurants", isAuthenticated, async (req, res, next) => {
       name,
       category,
       image,
-      description
+      description,
+      address,
+      location,
+      rating,
+      phone
     }
 
     const createdRestaurant = await Restaurant.create(newRestaurant)
@@ -78,7 +82,7 @@ router.get("/restaurants/:restaurantId", async (req, res, next) => {
 
 // PUT /restaurants/:restaurantId
 
-router.put("/restaurants/:restaurantId", isAuthenticated, async (req, res, next) => {
+router.put("/restaurants/:restaurantId", isAuthenticated, isAdmin, async (req, res, next) => {
 
   try {
     const { restaurantId } = req.params
@@ -109,7 +113,7 @@ router.put("/restaurants/:restaurantId", isAuthenticated, async (req, res, next)
 
 // DELETE /restaurants/:restaurantId
 
-router.delete("/restaurants/:restaurantId", isAuthenticated, async (req, res, next) => {
+router.delete("/restaurants/:restaurantId", isAuthenticated, isAdmin, async (req, res, next) => {
 
   try {
     const { restaurantId } = req.params
