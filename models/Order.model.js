@@ -24,6 +24,7 @@ const orderSchema = new Schema(
         },
         quantity: {
           type: Number,
+          required: true,
           default: 1,
           min: 1
         },
@@ -36,14 +37,14 @@ const orderSchema = new Schema(
 
     total: {
       type: Number,
+      required: true,
       min: 1,
-      default: 0
     },
 
     status: {
       type: String,
       enum: ["pendiente", "confirmado", "entregado", "cancelado"],
-      default: "pending"
+      default: "pendiente"
     }
   },
   { timestamps: true }
