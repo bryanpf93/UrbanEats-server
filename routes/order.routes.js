@@ -138,6 +138,8 @@ router.put("/orders/:orderId/status", isAuthenticated, async (req, res, next) =>
 
 router.get("/orders/user", isAuthenticated, async (req, res, next) => {
   try {
+
+    console.log(req.payload)
     const orders = await Order
       .find({ user: req.payload._id })
       .populate("products.product")
@@ -221,4 +223,22 @@ router.delete("/orders/:orderId", isAuthenticated, async (req, res, next) => {
   }
 })
 
-module.exports = router
+// router.delete("/orders", isAuthenticated, async (req, res, next) => {
+
+//   try {
+
+//     await Order.deleteMany({
+//       user: req.payload._id
+//     })
+
+//     res.status(204).send()
+
+//   } catch (err) {
+//     console.log("Error deleting all restaurants")
+//     next(err)
+//   }
+
+// })
+
+
+// module.exports = router
