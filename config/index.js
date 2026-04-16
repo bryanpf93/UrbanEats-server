@@ -22,14 +22,17 @@ module.exports = (app) => {
   app.set("trust proxy", 1);
 
   // controls a very specific header to pass headers from the frontend
+  const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.ORIGIN
+  ];
+
   app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.ORIGIN
-    ]
-  })
-);
+    cors({
+      origin: allowedOrigins,
+      credentials: true
+    })
+  );
 
   // In development environment the app logs
   app.use(logger("dev"));
